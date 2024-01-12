@@ -1,8 +1,32 @@
 ToDos:
+- Common Response format middleware
+- Read url encoded common middleware
+- read token and set user in request
 - Validation
 - Transformer
 - Authentication
-- URL encoded
 - Exception Handling
     - ValidationError
     - Uniqueness error
+- Encryption Service
+- Encrypted creds in DB (Inject at runtime, API to inject latest)
+
+
+- Users
+- Animals
+- Pets
+- Address
+- Refer
+- Onelink
+- Services
+    - Vets
+    - Drivers
+    - Clinics
+    - Chemists
+    - Vehicles
+    - Emergency vehicles
+    - Shop
+    - Services
+    - Restaurants
+    - Community
+    - Events
