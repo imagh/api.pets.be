@@ -16,30 +16,47 @@ export class User implements UserInterface {
   id: mongoose.Schema.Types.ObjectId;
 
   @Prop({
-    required: true
+    required: true,
+    type: mongoose.Schema.Types.String
   })
   cCode: string;
 
   @Prop({
-    required: true
+    required: true,
+    type: mongoose.Schema.Types.String
   })
   phone: string;
 
   @Prop({
     unique: true,
-    index: true
+    index: true,
+    type: mongoose.Schema.Types.String
   })
   email: string;
 
   @Prop({
-    index: true
+    index: true,
+    type: mongoose.Schema.Types.String
   })
   firstName: string;
 
   @Prop({
-    index: true
+    index: true,
+    type: mongoose.Schema.Types.String
   })
   lastName: string;
+
+  @Prop({
+    type: mongoose.Schema.Types.Boolean,
+    default: false
+  })
+  phoneVerified: Boolean;
+
+  @Prop({
+    type: mongoose.Schema.Types.Boolean,
+    default: false
+  })
+  emailVerified: Boolean;
 };
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -7,4 +7,6 @@ export interface User {
   email: string;
   firstName: string;
   lastName: string;
+  phoneVerified: Boolean,
+  emailVerified: Boolean
 };

@@ -1,6 +1,7 @@
 class RegisterUserDTO {
   cCode: string;
   phone: string;
+  phoneVerified: Boolean;
 };
 
 class CreateUserDTO {
@@ -17,4 +18,8 @@ class UpdateUserDTO {
   lastName: string;
 };
 
-export { RegisterUserDTO, CreateUserDTO, UpdateUserDTO };
+class MarkPhoneVerified {
+  phoneVerified: Boolean;
+}
+
+export { RegisterUserDTO, CreateUserDTO, UpdateUserDTO, MarkPhoneVerified };

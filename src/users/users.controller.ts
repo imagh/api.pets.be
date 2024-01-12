@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDTO } from './dto/users.dto';
+import { UpdateUserDTO } from './dto/users.dto';
 // import { User } from './interfaces/users.interface';
 import { User } from "./schemas/users.schema";
 
@@ -20,7 +20,13 @@ export class UsersController {
 
   @Post()
   @UsePipes(new ValidationPipe({ transform: true }))
-  async create(@Body() createUserDto: CreateUserDTO): Promise<User> {
-    return this.usersService.create(createUserDto);
+  async update(@Body() updateUserDto: UpdateUserDTO): Promise<User> {
+    return this.usersService.update(updateUserDto);
   }
+
+  // @Post()
+  // @UsePipes(new ValidationPipe({ transform: true }))
+  // async create(@Body() createUserDto: CreateUserDTO): Promise<User> {
+  //   return this.usersService.create(createUserDto);
+  // }
 }
