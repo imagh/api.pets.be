@@ -6,6 +6,9 @@ import { Auth } from './schemas/auth.schema';
 import mongoose, { Model } from 'mongoose';
 import { GenerateAuthDTO, VerifyAuthDTO } from './dto/auth.dto';
 import { User } from 'src/users/schemas/users.schema';
+import { JwtService } from '@nestjs/jwt';
+
+const anHour = 1000 * 60 * 60;
 
 @Injectable()
 export class AuthService {
@@ -15,7 +18,9 @@ export class AuthService {
     @Inject(OTPService)
     private readonly otpService: OTPService,
     @Inject(UsersService)
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
+    @Inject(JwtService)
+    private readonly jwtService: JwtService
   ) {}
                                                 
   async generate(generateAuthDto: GenerateAuthDTO): Promise<string> {
@@ -31,7 +36,7 @@ export class AuthService {
     return generatedAuth.id;
   }
 
-  async verify(verifyAuthDto: VerifyAuthDTO): Promise<User> {
+  async verify(verifyAuthDto: VerifyAuthDTO): Promise<{ access_token: string }> {
     let objectId = new mongoose.Types.ObjectId(verifyAuthDto.id);
 
     if (!mongoose.isValidObjectId(objectId)) {
@@ -52,6 +57,8 @@ export class AuthService {
         cCode: auth.cCode, phone: auth.phone, phoneVerified: true
       });
     }
-    return user;
+    const tokenPayload = { sub: user.id.toString(), expiry: Date.now() + anHour };
+    console.log(tokenPayload);
+    return { access_token: await this.jwtService.signAsync(tokenPayload) };
   }
 }

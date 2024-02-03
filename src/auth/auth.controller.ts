@@ -16,8 +16,8 @@ export class AuthController {
   }
 
   @Post('/verify')
-  async verify(@Body() verifyAuthDto: VerifyAuthDTO): Promise<User> {
-    TODO: // set session, token refresh token etc.
+  async verify(@Body() verifyAuthDto: VerifyAuthDTO): Promise<{ access_token: string }> {
+    // TODO: // set session, token refresh token etc.
     return this.authService.verify(verifyAuthDto);
   }
 }
