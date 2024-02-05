@@ -3,6 +3,8 @@ import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
 import { SKIP_AUTH } from "src/decorators/skip-auth.decorator";
+import { Role } from "src/roles/enums/roles.enum";
+import { RolesService } from "src/roles/roles.service";
 import { UsersService } from "src/users/users.service";
 
 @Injectable()
@@ -10,6 +12,7 @@ export class AuthGuard implements CanActivate {
     constructor(
         private readonly jwtService: JwtService,
         private readonly usersService: UsersService,
+        private readonly rolesService: RolesService,
         private reflector: Reflector
     ) {}
 
@@ -35,7 +38,11 @@ export class AuthGuard implements CanActivate {
             if (!user) {
                 throw new UnauthorizedException();
             }
-            request['user'] = { id: payload.sub };
+            const roles = await this.rolesService.findByQuery({ userId: payload.sub });
+            request['user'] = {
+                id: payload.sub,
+                roles: (roles || []).map(e => e.role).concat([ Role.User ])
+            };
         } catch {
             throw new UnauthorizedException();
         }

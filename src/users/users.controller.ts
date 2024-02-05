@@ -2,6 +2,8 @@ import { Body, Controller, Get, Param, Post, Request, UseGuards, UsePipes, Valid
 import { UsersService } from './users.service';
 import { UpdateUserDTO } from './dto/users.dto';
 import { User } from "./schemas/users.schema";
+import { Roles } from 'src/roles/decorators/roles.decorator';
+import { Role } from 'src/roles/enums/roles.enum';
 
 @Controller('users')
 export class UsersController {
