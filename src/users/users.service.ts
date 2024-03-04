@@ -48,6 +48,7 @@ export class UsersService {
 
   async update(updateUserDto: UpdateUserDTO): Promise<User> {
     const updatedUser = new this.userModel(updateUserDto);
+    // TODO: pass update query
     return updatedUser.updateOne().exec();
   }
 }

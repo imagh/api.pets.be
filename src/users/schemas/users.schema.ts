@@ -30,6 +30,7 @@ export class User implements UserInterface {
   @Prop({
     unique: true,
     index: true,
+    sparse: true,
     type: mongoose.Schema.Types.String
   })
   email: string;
