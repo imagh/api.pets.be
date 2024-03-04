@@ -1,11 +1,9 @@
 import mongoose from "mongoose";
 
-export interface Auth {
+export interface Token {
   id: mongoose.Schema.Types.ObjectId;
-  cCode: string;
-  phone: string;
-  otpId: string;
+  authId: string;
+  userId: string;
   access_token: string;
   refresh_token: string;
-  authenticated: Boolean;
 };

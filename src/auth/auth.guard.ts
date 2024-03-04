@@ -6,12 +6,14 @@ import { SKIP_AUTH } from "src/decorators/skip-auth.decorator";
 import { Role } from "src/roles/enums/roles.enum";
 import { RolesService } from "src/roles/roles.service";
 import { UsersService } from "src/users/users.service";
+import { TokensService } from "src/tokens/tokens.service";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
     constructor(
         private readonly jwtService: JwtService,
         private readonly usersService: UsersService,
+        private readonly tokensService: TokensService,
         private readonly rolesService: RolesService,
         private reflector: Reflector
     ) {}
@@ -25,22 +27,31 @@ export class AuthGuard implements CanActivate {
             return true;
         }
         const request = context.switchToHttp().getRequest();
-        const token = this.extractTokenFromHeader(request);
-        if (!token) {
+        const access_token = this.extractTokenFromHeader(request);
+        if (!access_token) {
+            if (skipAuth) {
+                return true;
+            }
             throw new UnauthorizedException();
         }
         try {
-            const payload = await this.jwtService.verifyAsync(token);
+            // TODO: Verify token against DB
+            const token = await this.tokensService.findOne({ access_token });
+            if (!token) {
+                throw new UnauthorizedException();
+            }
+            const payload = await this.jwtService.verifyAsync(access_token);
             if (payload.expiry < Date.now()) {
                 throw new UnauthorizedException();
             }
-            let user = await this.usersService.findById(payload.sub);
+            let user = await this.usersService.findById(token.userId);
             if (!user) {
                 throw new UnauthorizedException();
             }
-            const roles = await this.rolesService.findByQuery({ userId: payload.sub });
+            const roles = await this.rolesService.findByQuery({ userId: token.userId });
             request['user'] = {
-                id: payload.sub,
+                id: token.userId,
+                access_token,
                 roles: (roles || []).map(e => e.role).concat([ Role.User ])
             };
         } catch {

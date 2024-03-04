@@ -1,26 +1,17 @@
 import { Global, Module } from '@nestjs/common';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UsersModule } from 'src/users/users.module';
-import { OTPModule } from 'src/otp/otp.module';
-import { Auth, AuthSchema } from './schemas/auth.schema';
 import { JwtModule } from '@nestjs/jwt';
 import { AppConfigModule } from 'src/app-config/app-config.module';
 import { AppConfigService } from 'src/app-config/app-config.service';
-import { RolesModule } from 'src/roles/roles.module';
-import { TokenModule } from 'src/tokens/tokens.module';
+import { Token, TokenSchema } from './schemas/token.schema';
+import { TokensService } from './tokens.service';
 
 @Global()
 @Module({
   imports: [
     MongooseModule.forFeature([{
-      name: Auth.name, schema: AuthSchema
+      name: Token.name, schema: TokenSchema
     }], "auth"),
-    UsersModule,
-    RolesModule,
-    OTPModule,
-    TokenModule,
     JwtModule.registerAsync({
       imports: [AppConfigModule],
       global: true,
@@ -32,7 +23,7 @@ import { TokenModule } from 'src/tokens/tokens.module';
       inject: [AppConfigService]
     })
   ],
-  controllers: [AuthController],
-  providers: [AuthService]
+  providers: [TokensService],
+  exports: [TokensService]
 })
-export class AuthModule {}
+export class TokenModule {}

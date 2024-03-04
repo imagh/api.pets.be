@@ -1,11 +1,11 @@
 import mongoose, { HydratedDocument } from "mongoose";
-import { Auth as AuthInterface } from "../interfaces/auth.interface";
+import { Token as TokenInterface } from "../interfaces/token.interface";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
-export type AuthDocument = HydratedDocument<Auth>;
+export type TokenDocument = HydratedDocument<Token>;
 
 @Schema()
-export class Auth implements AuthInterface {
+export class Token implements TokenInterface {
   @Prop({
     required: true,
     index: true,
@@ -19,19 +19,13 @@ export class Auth implements AuthInterface {
     required: true,
     type: mongoose.Schema.Types.String
   })
-  cCode: string;
+  authId: string;
 
   @Prop({
     required: true,
     type: mongoose.Schema.Types.String
   })
-  phone: string;
-
-  @Prop({
-    required: true,
-    type: mongoose.Schema.Types.String
-  })
-  otpId: string;
+  userId: string;
 
   @Prop({
     unique: true,
@@ -44,13 +38,7 @@ export class Auth implements AuthInterface {
     type: mongoose.Schema.Types.String
   })
   refresh_token: string;
-
-  @Prop({
-    type: mongoose.Schema.Types.Boolean,
-    default: false
-  })
-  authenticated: Boolean;
 };
 
-export const AuthSchema = SchemaFactory.createForClass(Auth);
+export const TokenSchema = SchemaFactory.createForClass(Token);
 // mongoose.model(Auth.name, AuthSchema, 'auth');

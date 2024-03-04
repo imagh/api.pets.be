@@ -6,7 +6,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { OTPModule } from './otp/otp.module';
 import { ConfigModule } from '@nestjs/config';
-import { AppConfigService } from './app-config/app-config.service';
 import { AppConfigModule } from './app-config/app-config.module';
 import configuration from 'config/configuration';
 
