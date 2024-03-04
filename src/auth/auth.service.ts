@@ -1,12 +1,11 @@
-import { BadRequestException, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { OTPService } from 'src/otp/otp.service';
-import { UsersService } from 'src/users/users.service';
+import { UserService } from 'src/user/user.service';
 import { Auth, AuthDocument } from './schemas/auth.schema';
 import mongoose, { Model } from 'mongoose';
-import { GenerateAuthDTO, ReqUserDTO, UpdateAuthDTO, VerifyAuthDTO, VerifyAuthRespDTO } from './dto/auth.dto';
-import { JwtService } from '@nestjs/jwt';
-import { TokensService } from 'src/tokens/tokens.service';
+import { GenerateAuthDTO, ReqUserDTO, VerifyAuthDTO, VerifyAuthRespDTO } from './dto/auth.dto';
+import { TokenService } from 'src/token/token.service';
 
 const anHour = 1000 * 60 * 60;
 
@@ -17,12 +16,10 @@ export class AuthService {
     private readonly authModel: Model<Auth>,
     @Inject(OTPService)
     private readonly otpService: OTPService,
-    @Inject(UsersService)
-    private readonly usersService: UsersService,
-    @Inject(TokensService)
-    private readonly tokensService: TokensService,
-    @Inject(JwtService)
-    private readonly jwtService: JwtService
+    @Inject(UserService)
+    private readonly userService: UserService,
+    @Inject(TokenService)
+    private readonly tokenService: TokenService
   ) {}
 
   async findOne(query = {}): Promise<AuthDocument> {
@@ -61,12 +58,12 @@ export class AuthService {
       throw new UnauthorizedException("Incorrect OTP");
     }
     // fetch user
-    let user = await this.usersService.findOneByQuery({
+    let user = await this.userService.findOneByQuery({
       cCode: auth.cCode, phone: auth.phone
     });
     if (!user) {
       // create user if doesn't exist
-      user = await this.usersService.create({
+      user = await this.userService.create({
         cCode: auth.cCode, phone: auth.phone, phoneVerified: true
       });
     }
@@ -75,17 +72,17 @@ export class AuthService {
     await this.authModel.updateOne(auth.toJSON()).exec();
 
     // create tokens
-    return this.tokensService.generate(auth, user);
+    return this.tokenService.generate(auth, user);
   }
 
   async refresh(refresh_token: string): Promise<VerifyAuthRespDTO> {
     if (!refresh_token) {
       throw new BadRequestException("refresh_token is mandatory.");
     }
-    return this.tokensService.refresh(refresh_token);
+    return this.tokenService.refresh(refresh_token);
   }
 
   async signout(reqUser: ReqUserDTO): Promise<Boolean> {
-    return this.tokensService.delete(reqUser.access_token);
+    return this.tokenService.delete(reqUser.access_token);
   }
 }

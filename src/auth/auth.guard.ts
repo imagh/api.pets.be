@@ -3,18 +3,18 @@ import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
 import { SKIP_AUTH } from "src/decorators/skip-auth.decorator";
-import { Role } from "src/roles/enums/roles.enum";
-import { RolesService } from "src/roles/roles.service";
-import { UsersService } from "src/users/users.service";
-import { TokensService } from "src/tokens/tokens.service";
+import { Role } from "src/role/enums/role.enum";
+import { RoleService } from "src/role/role.service";
+import { UserService } from "src/user/user.service";
+import { TokenService } from "src/token/token.service";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
     constructor(
         private readonly jwtService: JwtService,
-        private readonly usersService: UsersService,
-        private readonly tokensService: TokensService,
-        private readonly rolesService: RolesService,
+        private readonly userService: UserService,
+        private readonly tokenService: TokenService,
+        private readonly roleService: RoleService,
         private reflector: Reflector
     ) {}
 
@@ -36,7 +36,7 @@ export class AuthGuard implements CanActivate {
         }
         try {
             // TODO: Verify token against DB
-            const token = await this.tokensService.findOne({ access_token });
+            const token = await this.tokenService.findOne({ access_token });
             if (!token) {
                 throw new UnauthorizedException();
             }
@@ -44,11 +44,11 @@ export class AuthGuard implements CanActivate {
             if (payload.expiry < Date.now()) {
                 throw new UnauthorizedException();
             }
-            let user = await this.usersService.findById(token.userId);
+            let user = await this.userService.findById(token.userId);
             if (!user) {
                 throw new UnauthorizedException();
             }
-            const roles = await this.rolesService.findByQuery({ userId: token.userId });
+            const roles = await this.roleService.findByQuery({ userId: token.userId });
             request['user'] = {
                 id: token.userId,
                 access_token,

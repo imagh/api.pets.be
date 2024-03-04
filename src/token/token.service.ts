@@ -2,15 +2,15 @@ import { BadRequestException, Inject, Injectable, NotFoundException, Unauthorize
 import { InjectModel } from '@nestjs/mongoose';
 import { Token, TokenDocument } from './schemas/token.schema';
 import { Model } from 'mongoose';
-import { TokenRespDTO } from './dto/tokens.dto';
+import { TokenRespDTO } from './dto/token.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Auth } from 'src/auth/interfaces/auth.interface';
-import { User } from 'src/users/interfaces/users.interface';
+import { User } from 'src/user/interfaces/user.interface';
 
 const anHour = 1000 * 60 * 60;
 
 @Injectable()
-export class TokensService {
+export class TokenService {
   constructor(
     @InjectModel(Token.name, "auth")
     private readonly tokenModel: Model<Token>,

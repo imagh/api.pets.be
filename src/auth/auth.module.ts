@@ -2,14 +2,14 @@ import { Global, Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UsersModule } from 'src/users/users.module';
+import { UsersModule } from 'src/user/user.module';
 import { OTPModule } from 'src/otp/otp.module';
 import { Auth, AuthSchema } from './schemas/auth.schema';
 import { JwtModule } from '@nestjs/jwt';
 import { AppConfigModule } from 'src/app-config/app-config.module';
 import { AppConfigService } from 'src/app-config/app-config.service';
-import { RolesModule } from 'src/roles/roles.module';
-import { TokenModule } from 'src/tokens/tokens.module';
+import { RolesModule } from 'src/role/role.module';
+import { TokenModule } from 'src/token/token.module';
 
 @Global()
 @Module({

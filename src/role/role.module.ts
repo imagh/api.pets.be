@@ -1,7 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { RolesService } from './roles.service';
-import { Role, RoleSchema } from './schemas/roles.schema';
+import { RoleService } from './role.service';
+import { Role, RoleSchema } from './schemas/role.schema';
 
 @Global()
 @Module({
@@ -10,7 +10,7 @@ import { Role, RoleSchema } from './schemas/roles.schema';
       name: Role.name, schema: RoleSchema
     }], "auth")
   ],
-  providers: [RolesService],
-  exports: [RolesService]
+  providers: [RoleService],
+  exports: [RoleService]
 })
 export class RolesModule {}

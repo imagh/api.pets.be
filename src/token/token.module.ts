@@ -4,7 +4,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AppConfigModule } from 'src/app-config/app-config.module';
 import { AppConfigService } from 'src/app-config/app-config.service';
 import { Token, TokenSchema } from './schemas/token.schema';
-import { TokensService } from './tokens.service';
+import { TokenService } from './token.service';
 
 @Global()
 @Module({
@@ -23,7 +23,7 @@ import { TokensService } from './tokens.service';
       inject: [AppConfigService]
     })
   ],
-  providers: [TokensService],
-  exports: [TokensService]
+  providers: [TokenService],
+  exports: [TokenService]
 })
 export class TokenModule {}

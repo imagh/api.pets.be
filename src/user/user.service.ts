@@ -1,11 +1,11 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
-import { RegisterUserDTO, UpdateUserDTO } from "./dto/users.dto";
-import { User } from "./schemas/users.schema";
+import { RegisterUserDTO, UpdateUserDTO } from "./dto/user.dto";
+import { User } from "./schemas/user.schema";
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { Model } from "mongoose";
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(
     @InjectModel(User.name, "core")
     private readonly userModel: Model<User>

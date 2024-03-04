@@ -1,5 +1,5 @@
 import mongoose, { HydratedDocument } from "mongoose";
-import { User as UserInterface } from "../interfaces/users.interface";
+import { User as UserInterface } from "../interfaces/user.interface";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
 export type UserDocument = HydratedDocument<User>;
