@@ -1,9 +1,8 @@
-import mongoose from "mongoose";
-
 export interface OTP {
-  id: mongoose.Schema.Types.ObjectId;
+  id: string;
   otp: string;
   action: string;
-  generatedAt: number;
   expiryIn: number;
+  createdAt: Date;
+  updatedAt: Date;
 };

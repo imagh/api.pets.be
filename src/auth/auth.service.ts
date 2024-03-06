@@ -22,13 +22,15 @@ export class AuthService {
     private readonly tokenService: TokenService
   ) {}
 
-  async findOne(query = {}): Promise<AuthDocument> {
-    return this.authModel.findOne(query, { _id: 0 });
+  async findOne(query = {}, projection = {}): Promise<AuthDocument> {
+    projection = Object.assign({ _id: 0 }, projection);
+    return this.authModel.findOne(query, projection);
   }
 
   async generate(generateAuthDto: GenerateAuthDTO): Promise<string> {
     const otpId = await this.otpService.generate('register');
     const authInput = {
+      id: new mongoose.Types.ObjectId().toString(),
       cCode: generateAuthDto.cCode,
       phone: generateAuthDto.phone,
       otpId
@@ -41,13 +43,9 @@ export class AuthService {
 
   async verify(id: string, verifyAuthDto: VerifyAuthDTO): Promise<VerifyAuthRespDTO> {
     // TODO: initiate transaction
-    let objectId = new mongoose.Types.ObjectId(id);
 
-    if (!mongoose.isValidObjectId(objectId)) {
-      throw new BadRequestException("Please provide correct id.");
-    }
     // fetch auth request
-    let auth = await this.findOne({ id: objectId });
+    let auth = await this.findOne({ id });
     if (!auth || auth.authenticated) {
       throw new BadRequestException("Invalid auth ID");
     }

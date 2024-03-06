@@ -1,19 +1,19 @@
 import mongoose, { HydratedDocument } from "mongoose";
 import { Auth as AuthInterface } from "../interfaces/auth.interface";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { OTP } from "src/otp/schemas/otp.schema";
 
 export type AuthDocument = HydratedDocument<Auth>;
 
-@Schema()
+@Schema({ timestamps: true })
 export class Auth implements AuthInterface {
   @Prop({
     required: true,
     index: true,
     unique: true,
-    type: mongoose.Schema.Types.ObjectId,
-    auto: true
+    type: mongoose.Schema.Types.String
   })
-  id: mongoose.Schema.Types.ObjectId;
+  id: string;
 
   @Prop({
     required: true,
@@ -34,23 +34,27 @@ export class Auth implements AuthInterface {
   otpId: string;
 
   @Prop({
-    unique: true,
-    type: mongoose.Schema.Types.String
-  })
-  access_token: string;
-
-  @Prop({
-    unique: true,
-    type: mongoose.Schema.Types.String
-  })
-  refresh_token: string;
-
-  @Prop({
     type: mongoose.Schema.Types.Boolean,
     default: false
   })
   authenticated: Boolean;
+
+  @Prop({
+    type: mongoose.Schema.Types.Date
+  })
+  createdAt: Date;
+
+  @Prop({
+    type: mongoose.Schema.Types.Date
+  })
+  updatedAt: Date;
 };
 
 export const AuthSchema = SchemaFactory.createForClass(Auth);
 // mongoose.model(Auth.name, AuthSchema, 'auth');
+
+AuthSchema.virtual("otp", {
+  ref: OTP.name,
+  localField: "otpId",
+  foreignField: "id"
+});

@@ -4,16 +4,15 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
 export type OTPDocument = HydratedDocument<OTP>;
 
-@Schema()
+@Schema({ timestamps: true })
 export class OTP implements OTPInterface {
   @Prop({
     required: true,
     index: true,
     unique: true,
-    type: mongoose.Schema.Types.ObjectId,
-    auto: true
+    type: mongoose.Schema.Types.String
   })
-  id: mongoose.Schema.Types.ObjectId;
+  id: string;
 
   @Prop({
     required: true,
@@ -29,16 +28,20 @@ export class OTP implements OTPInterface {
 
   @Prop({
     required: true,
-    type: mongoose.Schema.Types.Number
-  })
-  generatedAt: number;
-
-  @Prop({
-    required: true,
     type: mongoose.Schema.Types.Number,
     default: 600000
   })
   expiryIn: number;
+
+  @Prop({
+    type: mongoose.Schema.Types.Date
+  })
+  createdAt: Date;
+
+  @Prop({
+    type: mongoose.Schema.Types.Date
+  })
+  updatedAt: Date;
 };
 
 export const OTPSchema = SchemaFactory.createForClass(OTP);

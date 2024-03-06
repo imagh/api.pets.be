@@ -4,16 +4,15 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema()
+@Schema({ timestamps: true })
 export class User implements UserInterface {
   @Prop({
     required: true,
     index: true,
     unique: true,
-    type: mongoose.Schema.Types.ObjectId,
-    auto: true
+    type: mongoose.Schema.Types.String
   })
-  id: mongoose.Schema.Types.ObjectId;
+  id: string;
 
   @Prop({
     required: true,

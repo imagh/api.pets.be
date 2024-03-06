@@ -13,30 +13,31 @@ export class OTPService {
 	async generate(action: string, expiryIn?: number): Promise<string> {
 
 		let otp = new this.otpModel({
+			id: new mongoose.Types.ObjectId().toString(),
 			otp: Math.floor(Math.random() * 900000 + 100000),
 			action,
-			generatedAt: Date.now(),
 			expiryIn
 		});
 
 		let generatedOTP = await otp.save();
 		console.log(generatedOTP.toString());
-		return generatedOTP.id.toString();
+		return generatedOTP.id;
 	}
 
 	async validate(id: string, otpInput: string): Promise<Boolean> {
-	  let objectId = new mongoose.Types.ObjectId(id);
+	//   let objectId = new mongoose.Types.ObjectId(id);
+	let objectId = id;
 
     if (!mongoose.isValidObjectId(objectId)) {
       throw new BadRequestException("Please provide correct OTP id.");
     }
 
-    let otp = await this.otpModel.findOne({ id: objectId }, { _id: 0 }).exec();
+    let otp = await this.otpModel.findOne({ id: objectId }).exec();
 
     if (!otp) {
       throw new NotFoundException("OTP not found. Please regenerate OTP.");
     }
-		if ((otp.generatedAt + otp.expiryIn) < Date.now()) {
+		if ((otp.createdAt.getTime() + otp.expiryIn) < Date.now()) {
 			await otp.updateOne({ otp: "expiredAndFailed" }).exec();
 			throw new BadRequestException("OTP expired. Please regenerate and try again.");
 		}

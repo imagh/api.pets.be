@@ -12,13 +12,7 @@ export class UserService {
   ) {}
 
   async findById(id: string): Promise<User> {
-    let objectId = new mongoose.Types.ObjectId(id);
-
-    if (!mongoose.isValidObjectId(objectId)) {
-      throw new BadRequestException("Please provide correct id.");
-    }
-
-    let user = await this.userModel.findOne({ id: objectId }, { _id: 0 }).exec();
+    let user = await this.userModel.findOne({ id }, { _id: 0 }).exec();
 
     if (!user) {
       throw new NotFoundException("User not found.");
@@ -40,7 +34,9 @@ export class UserService {
   }
 
   async create(registerUserDto: RegisterUserDTO): Promise<User> {
-    const registeredUser = new this.userModel(registerUserDto);
+    const registeredUser = new this.userModel(Object.assign({
+      id: new mongoose.Types.ObjectId().toString()
+    }, registerUserDto));
     console.log(registeredUser);
     
     return registeredUser.save();

@@ -1,7 +1,5 @@
-import mongoose from "mongoose";
-
 export interface Token {
-  id: mongoose.Schema.Types.ObjectId;
+  id: string;
   authId: string;
   userId: string;
   access_token: string;
